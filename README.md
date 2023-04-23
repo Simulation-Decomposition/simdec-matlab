@@ -47,7 +47,8 @@ Function `decomposition` chooses the most important input variables, breakes the
 
 ```matlab
     % Initialize decomposition
-    dec_limit = 0.8; % cummulative significance threshold (used to decide how many variables to take for decomposition)
+    dec_limit = 0.8; % cummulative significance threshold 
+                     % (used to decide how many variables to take for decomposition)
     
     output_name = text_data(1,1);
     input_names = text_data(1,2:end);
