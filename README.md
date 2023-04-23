@@ -1,8 +1,8 @@
 ![image](https://user-images.githubusercontent.com/37065157/233836694-5312496e-4ada-47cb-bc09-3bf8c00be135.png)
 
-**Simulation decomposition** or **SimDec** is a sensitivity and uncertainty analysis method, which is based on Monte Carlo simulation. SimDec consists of three major parts:
+**Simulation decomposition** or **SimDec** is an uncertainty and sensitivity analysis method, which is based on Monte Carlo simulation. SimDec consists of three major parts:
 1. computing significance indices, 
-2. creating multi-variable scenarios and mapping the output valuest to them, and 
+2. creating multi-variable scenarios and mapping the output values to them, and 
 3. visualizing the scenarios on the output distribution by color-coding its segments. 
 
 SimDec reveals the nature of causalities and interaction effects in the model.  
@@ -18,7 +18,7 @@ Simply download the matlab [functions](functions) and add them to your path when
 The following procedure is saved in the [main.m](main.m) and uses [example_data.xlsx](example_data.xlsx).
 
 ### Load data 
-First the simulated `inputs` and the `output` need to be specified. They can result from a Monte Carlo simulaiton arranged directly in matlab, or conducted elsewhere and then loaded through a file, like in this example. The `append_with_cat` function reads any string variables and converts them into numeric ones for further processing. 
+First the simulated `inputs` and the `output` need to be specified. They can result from a Monte Carlo simulation arranged directly in matlab, or conducted elsewhere and then loaded through a file, like in this example. The `append_with_cat` function reads any string variables and converts them into numeric ones for further processing. 
 
 ```matlab
 %% GET DATA
@@ -33,7 +33,7 @@ First the simulated `inputs` and the `output` need to be specified. They can res
 
 
 ### Compute significance indices
-Function `significance` computes first-order effects `FOE` (main individual effect of every input variable), second-order effects `SOE` (interaction effects between pairs of variables and combined sensitiivty indices `SI`. Each value shows what portion of the variance of the output is explained (negative SOE values indicate correlation).  
+Function `significance` computes first-order effects `FOE` (main individual effect of every input variable), second-order effects `SOE` (interaction effects between pairs of variables and combined sensitivity indices `SI`. Each value shows what portion of the variance of the output is explained (negative SOE values indicate correlation).  
 
 ```matlab
     [SI, FOE, SOE]  = significance (output, inputs)
@@ -43,7 +43,7 @@ Function `significance` computes first-order effects `FOE` (main individual effe
 
 
 ### Run decomposition
-Function `decomposition` chooses the most important input variables, breakes them down into states, forms scenarios out of all combinations of those states and maps the sceanrios onto the output values.
+Function `decomposition` chooses the most important input variables, breaks them down into states, forms scenarios out of all combinations of those states and maps the scenarios onto the output values.
 
 ```matlab
     % Initialize decomposition
@@ -74,7 +74,7 @@ Feel free to go an extra step, - name the states and merge the cells of the lege
 
 
 ### Customize
-There are a number of ways to customize the visuals. One can choose different input variables for decomposition, predefine the amount of states and specific numeric threshold, and most importangly, change the colors. HEre is an example of all of those.
+There are a number of ways to customize the visuals. One can choose different input variables for decomposition, predefine the number of states and specific numeric threshold, and most importantly, change the colors. Here is an example of all of those.
 
 ```matlab
 %% CREATE CUSTOM DECOMPOSITION (choose inputs & alter states) 
@@ -109,4 +109,4 @@ The algorithms and visualizations used in this package came primarily out of res
 
 - Kozlova, M., & Yeomans, J. S. (2022). Monte Carlo Enhancement via Simulation Decomposition: A “Must-Have” Inclusion for Many Disciplines. _INFORMS Transactions on Education, 22_(3), 147-159. [Available here](https://pubsonline.informs.org/doi/10.1287/ited.2019.0240).
 - Kozlova, M., Moss, R. J., Yeomans, J. S., & Caers, J. (forthcoming). Uncovering Heterogeneous Effects in Computational Models for Sustainable Decision-making. _Environmental Modelling & Software_. 
-- Kozlova, M., Moss, R. J., Roy, P., Alam, A., & Yeomans, J. S. (forthcoming). SimDec algorithm. In M. Kozlova & J. S. Yeomans (Eds.), _Sensitivity analysis for Business, Technology, and Policymaking Made Easy with Simulation Decomposition_. Routledge.
+- Kozlova, M., Moss, R. J., Roy, P., Alam, A., & Yeomans, J. S. (forthcoming). SimDec algorithm. In M. Kozlova & J. S. Yeomans (Eds.), _Sensitivity Analysis for Business, Technology, and Policymaking Made Easy with Simulation Decomposition_. Routledge.
