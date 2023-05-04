@@ -39,7 +39,7 @@ Function `significance` computes first-order effects `FOE` (main individual effe
     sum(SI) % shows what portion of the variance of the output is explained 
             % by the combined first- and second-order effects of the inputs
 ```
-Here is the result it provides. Each value shows what portion of the variance of the output is explained (negative SOE values indicate correlation).  
+Here is the result it returns:
 
 SI =
 
@@ -62,6 +62,8 @@ SOE =
          0         0         0    0.0363
          0         0         0         0
 
+
+Each value shows what portion of the variance of the output is explained (negative SOE values indicate correlation). In this example, SI shows that the most significant inputs are X2 (52%) and X4 (35%). SOE points out that there is interaction between X2 and X3 (11%) and correlation between X2 and X3 (-6%).
 
 
 ### Run decomposition
