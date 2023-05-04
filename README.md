@@ -40,7 +40,7 @@ Function `significance` computes first-order effects `FOE` (main individual effe
             % by the combined first- and second-order effects of the inputs
 ```
 Here is the result it provides. Each value shows what portion of the variance of the output is explained (negative SOE values indicate correlation).  
-`
+
 SI =
 
     0.0404
@@ -61,7 +61,6 @@ SOE =
          0         0   -0.0605    0.1059
          0         0         0    0.0363
          0         0         0         0
-`
 
 
 
