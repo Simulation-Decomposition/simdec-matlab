@@ -32,13 +32,37 @@ First the simulated `inputs` and the `output` need to be specified. They can res
 
 
 ### Compute significance indices
-Function `significance` computes first-order effects `FOE` (main individual effect of every input variable), second-order effects `SOE` (interaction effects between pairs of variables and combined sensitivity indices `SI`. Each value shows what portion of the variance of the output is explained (negative SOE values indicate correlation).  
+Function `significance` computes first-order effects `FOE` (main individual effect of every input variable), second-order effects `SOE` (interaction effects between pairs of variables and combined sensitivity indices `SI`. 
 
 ```matlab
     [SI, FOE, SOE]  = significance (output, inputs)
     sum(SI) % shows what portion of the variance of the output is explained 
             % by the combined first- and second-order effects of the inputs
 ```
+Here is the result it provides. Each value shows what portion of the variance of the output is explained (negative SOE values indicate correlation).  
+`
+SI =
+
+    0.0404
+    0.5219
+    0.0978
+    0.3504
+
+FOE =
+
+    0.0362
+    0.4974
+    0.1091
+    0.2775
+
+SOE =
+
+         0    0.0034    0.0015    0.0035
+         0         0   -0.0605    0.1059
+         0         0         0    0.0363
+         0         0         0         0
+`
+
 
 
 ### Run decomposition
