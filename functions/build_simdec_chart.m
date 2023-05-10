@@ -108,14 +108,21 @@ ylabel('Probability');
 figure
 h=histogram(output,bins);
 xticks=get(gca,'xtick');
-% to fix matlab R2022b update issue, when the last X tick is not
-%   necesseraly at the very end
-if max(h.BinEdges) > max(xticks)
-    xticks = [xticks, xticks(end)+xticks(2)]; 
-end
+
+    % to fix matlab R2022b update issue, when the first/last X tick is not
+    %   necesseraly at the very edge
+    if max(h.BinEdges) > max(xticks)
+        xticks = [xticks, xticks(end)+xticks(2)]; 
+    end
+    
+    if min(h.BinEdges) < min(xticks)
+        xticks = [xticks(1)-xticks(2), xticks]; 
+    end
+    
 yticks=get(gca,'ytick');
 close
-% X axis
+
+    % X axis
 
 % getting corresponding min and max on the artificial axis
 min_art=(xticks(1)-min(output))*bins/(max(output)-min(output));
