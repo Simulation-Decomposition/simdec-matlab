@@ -24,11 +24,7 @@ function [N_bins_foe, N_bins_soe] = number_of_bins(N_runs, N_factors)
     N_bins_foe = ceil(36 - 2.7* N_factors + (0.0017 - 0.00008 * N_factors) * N_runs); % linear approximation of the experimental results from (Marzban & Lahmer, 2016)
         if N_bins_foe <= 30
             N_bins_foe = 10; % setting a limit to fit the experimental results
-        end
-     
-        while rem(N_runs, N_bins_foe) ~= 0
-            N_bins_foe = N_bins_foe + 1;
-        end   
+        end  
 
 
     % for second-order effects (soe)
