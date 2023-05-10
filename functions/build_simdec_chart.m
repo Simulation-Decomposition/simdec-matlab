@@ -111,12 +111,15 @@ xticks=get(gca,'xtick');
 
     % to fix matlab R2022b update issue, when the first/last X tick is not
     %   necesseraly at the very edge
+    
+    xtick_step = xticks(2)-xticks(1);
+    
     if max(h.BinEdges) > max(xticks)
-        xticks = [xticks, xticks(end)+xticks(2)]; 
+        xticks = [xticks, xticks(end) + xtick_step]; 
     end
     
     if min(h.BinEdges) < min(xticks)
-        xticks = [xticks(1)-xticks(2), xticks]; 
+        xticks = [xticks(1) - xtick_step, xticks]; 
     end
     
 yticks=get(gca,'ytick');
