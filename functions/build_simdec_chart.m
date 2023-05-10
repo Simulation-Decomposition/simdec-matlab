@@ -65,7 +65,7 @@ ylabel('Probability');
     
     % main colors 
     if isempty(main_colors)
-        main_colors = {'#00B0F0'; '#E7D819'; '#1FDF4D'};
+        main_colors = {'#00B0F0'; '#E7D819'; '#1FDF4D';'#ed4284';'#9054de'};
     end 
 
     N_main_colors = max(scenario_legend(:,2));
