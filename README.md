@@ -43,17 +43,17 @@ Here is the result it returns:
 
 SI =
 
-    0.0404
-    0.5219
-    0.0978
-    0.3504
+    0.0409
+    0.5155
+    0.0955
+    0.3506
 
 FOE =
 
-    0.0362
-    0.4974
-    0.1091
-    0.2775
+    0.0367
+    0.4910
+    0.1069
+    0.2777
 
 SOE =
 
@@ -64,7 +64,7 @@ SOE =
 
 sum(SI) = 
 
-    1.0104
+    1.0024
 
 Each value shows what portion of the variance of the output is explained (negative SOE values indicate correlation). In this example, SI shows that the most significant inputs are X2 (52%) and X4 (35%). SOE points out that there is interaction between X2 and X3 (11%) and correlation between X2 and X3 (-6%). In total, 101% of the output variance is explained (1% can be attributed to noise).
 
