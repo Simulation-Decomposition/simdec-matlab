@@ -115,12 +115,20 @@ if isempty(manual_thresholds) % if automatic definition of thresholds
                     f = f + 1;
                 else
                     x = inputs(:,f); 
-                    x_sorted = zeros (size(x,1)+1,1);
-                    x_sorted(1:end-1) = sort (x); x_sorted(end)=x_sorted(end-1)+1;
-                    min_threshold = x_sorted(1);
-                    state_size = round(N_runs/states(f));
-                    for s = 1 : states(f)-1
-                        thresholds(s,f) = x_sorted (state_size*s+1);
+                    if numel(unique(x)) <= 5
+                        uniq = unique(x);
+                        margin = min(uniq(2:end) - uniq(1:end-1))*0.1; % finding a margin that wouldn't overlap with other states
+                        for s = 1 : states(f)-1
+                            thresholds(s,f) = uniq(s) + margin;
+                        end
+                    else
+                        x_sorted = zeros (size(x,1)+1,1);
+                        x_sorted(1:end-1) = sort (x); x_sorted(end)=x_sorted(end-1)+1;
+                        min_threshold = x_sorted(1);
+                        state_size = round(N_runs/states(f));
+                        for s = 1 : states(f)-1
+                            thresholds(s,f) = x_sorted (state_size*s+1);
+                        end
                     end
                     thresholds(states(f),f) = max(x) + 1;
                 end
