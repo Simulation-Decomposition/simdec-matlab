@@ -137,7 +137,7 @@ xticks_art=(xticks-xticks(1)).*distance_art./(xticks(end)-xticks(1))+min_art;
 
 % Y axis
 total=size(output,1);
-yticks_art=yticks/total;
+yticks_art=round(yticks/total,3);
 a=[cellstr(num2str(yticks_art'*100))]; % converting values into percentage
 pct = char(ones(size(a,1),1)*'%'); % creating vector of % signs
 new_yticks = [char(a),pct]; % add the '%' signs after the percentage values
