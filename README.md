@@ -4,7 +4,7 @@
 ![image](https://user-images.githubusercontent.com/37065157/233836694-5312496e-4ada-47cb-bc09-3bf8c00be135.png)
 
 **Simulation decomposition** or **SimDec** is an uncertainty and sensitivity analysis method, which is based on Monte Carlo simulation. SimDec consists of three major parts:
-1. computing significance indices, 
+1. computing sensitivity indices, 
 2. creating multi-variable scenarios and mapping the output values to them, and 
 3. visualizing the scenarios on the output distribution by color-coding its segments. 
 
@@ -34,7 +34,7 @@ First the simulated `inputs` and the `output` need to be specified. They can res
 ```
 
 
-### Compute significance indices
+### Compute sensitivity indices
 Function `significance` computes first-order effects `FOE` (main individual effect of every input variable), second-order effects `SOE` (interaction effects between pairs of variables and combined sensitivity indices `SI`. 
 
 ```matlab
@@ -69,7 +69,7 @@ sum(SI) =
 
     1.0024
 
-Each value shows what portion of the variance of the output is explained (negative SOE values indicate correlation). In this example, SI shows that the most significant inputs are X2 (52%) and X4 (35%). SOE points out that there is interaction between X2 and X3 (11%) and correlation between X2 and X3 (-6%). In total, 101% of the output variance is explained (1% can be attributed to noise).
+Each value shows what portion of the variance of the output is explained (negative SOE values indicate correlation). In this example, SI shows that the most important inputs are X2 (52%) and X4 (35%). SOE points out that there is interaction between X2 and X3 (11%) and correlation between X2 and X3 (-6%). In total, 101% of the output variance is explained (1% can be attributed to noise).
 
 
 ### Run decomposition
@@ -77,7 +77,7 @@ Function `decomposition` chooses the most important input variables, breaks them
 
 ```matlab
     % Initialize decomposition
-    dec_limit = 0.8; % cummulative significance threshold 
+    dec_limit = 0.8; % cummulative importance threshold 
                      % (used to decide how many variables to take for decomposition)
     
     output_name = text_data(1,1);
