@@ -9,7 +9,9 @@
 %% AUTOMATIC SIMDEC
     
     [SI, FOE, SOE]  = sensitivity_indices (output, inputs) % Calculate sensitivity indices
-
+    sum(SI) % shows what portion of the variance of the output is explained 
+            % by the combined first- and second-order effects of the inputs
+            
     [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI); % Build visualization
 
 
