@@ -87,9 +87,13 @@ The SimDec graph and the corresponding legend is generated automatically when ru
 ![image](https://github.com/Simulation-Decomposition/simdec-matlab/assets/37065157/2304f44a-05b1-4c9d-88c8-d4862ca54258)
 
 
-Feel free to go an extra step, - name the states (i.e., *low*, *medium*, *high*) and merge the cells of the legend with the same state. 
+**That's it, your SimDec analysis is completed!**
 
-That's it, you SimDec analysis is completed. Unless you want to customize it furhter.
+But you can customize it furhter.
+
+And feel free to go an extra step in your reporting, - name the states (i.e., *low*, *medium*, *high*) and merge the cells of the legend with the same state. The help to make those automatic in would be greatly approeciated! 
+
+
 
 ### 4. Customize
 
@@ -133,15 +137,20 @@ The `'BoundaryType'` argument defines how the numeric range of input variables i
 
 
 #### 4.3. Tuning decomposition: more variables, different state formation
-The decomposition can be further fully customized by altering the amount and the order of inputs for decomposition(`'OrderOfVariables'`), defining custom amount of states (`'NumberOfStates'`) and their boundaries (`'StateBoundaries'`). 
+The decomposition can be further fully customized by altering the amount and the order of inputs for decomposition (`'OrderOfVariables'`), defining custom amount of states (`'NumberOfStates'`) and their boundaries (`'StateBoundaries'`). 
 
 ```matlab
-    manual_vars = [0 2 1 0]; % specify the order of variables for decomposition, use 0 to exclude, size (1, N_inputs). In this example we set that the third input variable is used first, and then the second one.  
-    manual_states = [0 3 2 0]; % specify the number of states for each variable, size (1, N_inputs), the position corresponds to the original order of inputs. Three states for the second input variable and two states for the third. 
+    manual_vars = [0 2 1 0]; % specify the order of variables for decomposition, 
+        % use 0 to exclude, size (1, N_inputs). In this example we set that the third
+        % input variable is used first, and then the second one.  
+    manual_states = [0 3 2 0]; % specify the number of states for each variable, 
+        % size (1, N_inputs), the position corresponds to the original order of inputs.
+        % Three states for the second input variable and two states for the third. 
     manual_boundaries =  [ NaN    min(inputs(:,2))     min(inputs(:,3))    NaN
                            NaN         100                  657.5          NaN
                            NaN         650             max(inputs(:,3))    NaN      
-                           NaN    max(inputs(:,2))          NaN            NaN]; % specify numeric boundaries for every state, size(max(manual_states)+1, N_inputs).
+                           NaN    max(inputs(:,2))          NaN            NaN]; 
+        % specify numeric boundaries for every state, size(max(manual_states)+1, N_inputs).
 
 
     [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs,...
@@ -150,13 +159,13 @@ The decomposition can be further fully customized by altering the amount and the
 
 ![image](https://github.com/Simulation-Decomposition/simdec-matlab/assets/37065157/ea3b79e1-c969-467d-a817-b23c55a01402)
 
-The optional function attributes can be used in any combination. 
+The optional attributes can be used in any combination. 
 
 
 ## Links
 - See [how to read SimDec on wikipedia](https://en.wikipedia.org/wiki/SimDec)
-- [People behind SimDec](https://www.simdec.fi/team)
-- Join our [Sensitivity Analysis discord community](https://discord.gg/54SFcNsZS4)
+- Meet [people behind SimDec](https://www.simdec.fi/team)
+- Stay in touch via our [Sensitivity Analysis discord community](https://discord.gg/54SFcNsZS4)
 
 
 ## Citations
