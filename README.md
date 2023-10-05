@@ -98,9 +98,20 @@ The SimDec graph and the corresponding legend is created with the function `buil
     % Build the graph
     sm = build_simdec_chart(output,scenarios,scen_legend,[],output_name,var_names_dec);
 ```
-![image](https://user-images.githubusercontent.com/37065157/233839183-7852735f-4c80-47da-9f26-d4ac8d962dd3.png)
+![image](https://github.com/Simulation-Decomposition/simdec-matlab/assets/37065157/2304f44a-05b1-4c9d-88c8-d4862ca54258)
+
 
 Feel free to go an extra step, - name the states and merge the cells of the legend with the same state. 
+
+
+
+![image](https://github.com/Simulation-Decomposition/simdec-matlab/assets/37065157/0d9be2e4-7f8f-462d-a3cc-2e34a19f0ea4)
+
+
+![image](https://github.com/Simulation-Decomposition/simdec-matlab/assets/37065157/305b660f-df12-4a78-bc34-aa61d004d760)
+
+
+![image](https://github.com/Simulation-Decomposition/simdec-matlab/assets/37065157/ea3b79e1-c969-467d-a817-b23c55a01402)
 
 
 ### Customize
@@ -130,14 +141,7 @@ There are a number of ways to customize the visuals. One can choose different in
                                                      % of states of the first for decomposition variable. 
     sm = build_simdec_chart(output,scenarios,scen_legend,main_colors,output_name,var_names_dec);
 ```
-![image](https://user-images.githubusercontent.com/37065157/233839368-f3cc430b-f974-4de2-9d80-27179eaa1458.png)
 
-
-## Code structure
-Each block in Figure below is a matlab function. The green ones are higher-level functions that are called in the main script (i.e. example above).
-
-
-![scheme](https://user-images.githubusercontent.com/37065157/234074889-719ea46b-f542-4ef5-8709-542747fc17c1.png)
 
 
 
