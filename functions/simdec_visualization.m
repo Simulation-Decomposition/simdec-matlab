@@ -23,7 +23,7 @@ function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_vi
 %                        the states of inputs are defined:
 %                        'precentile-based' for same amount of observations 
 %                        in each state,   
-%                        'median-based' for equaly-spaced ranges of states.
+%                        'median-based' for equally-spaced ranges of states.
 %   StateBoundaries      - maximums (numeric boundaries) 
 %                        of every state, leave the rest as NaN, e.g. 
 %                                          [NaN   3  -1    NaN;
