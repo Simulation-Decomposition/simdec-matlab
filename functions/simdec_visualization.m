@@ -42,7 +42,7 @@ function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_vi
 %   scenarios          - an array of the same size as Y with scenario indices 
 %                      for every simulation run
 %   scen_legend        - a scenario table that shows which states of which
-%                      variables compose different sceanrios
+%                      variables compose different scenarios
 %   boundaries_out     - numeric boundaries of states of input variables
 %   stacked_histogram  - object that returns the visualization
 %
