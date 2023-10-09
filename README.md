@@ -17,6 +17,11 @@ Simply download the matlab [functions](functions) and add them to your path when
 
 Use [sensitivity_indices.m](sensitivity_indices.m) for computing the indices and [simdec_visualization.m](simdec_visualization.m) for building the graphics.
 
+## Documentation
+
+
+
+
 ## Example
 The following procedure is saved in the [main.m](main.m) and uses [example_data.xlsx](example_data.xlsx).
 
@@ -35,7 +40,7 @@ First the simulated `inputs` and the `output` need to be specified. They can res
 Function [sensitivity_indices.m](sensitivity_indices.m) computes first-order effects `FOE` (main individual effect of every input variable), second-order effects `SOE` (interaction effects between pairs of variables) and combined sensitivity indices `SI`. 
 
 ```matlab
-    [SI, FOE, SOE]  = significance (output, inputs)
+    [SI, FOE, SOE]  = sensitivity_indices (output, inputs)
     sum(SI) % shows what portion of the variance of the output is explained 
             % by the combined first- and second-order effects of the inputs
 ```
