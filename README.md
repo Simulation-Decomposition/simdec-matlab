@@ -19,7 +19,46 @@ Use [sensitivity_indices.m](sensitivity_indices.m) for computing the indices and
 
 ## Documentation
 
+### function [SI, FOE, SOE]  = [sensitivity_indices](sensitivity_indices.m) (output, inputs)
 
+calculates how much variability of the output is explained by inputs. 
+
+INPUTS
+- **output** - target variable (Y), size [N_runs, 1].
+- **inputs** - input variables (Xs), size [N_runs, N_factors].
+
+OUTPUTS
+- **FOE** - first-order effects (also called 'main' or 'individual'), size [N_factors, 1].
+- **SOE** - second-order effects (also called 'interaction'), size [N_factors, N_factors].
+- **SI**  - sensitivity indices, combined first- and second-order effect of each input, size [N_factors, 1].  
+
+### function [scenarios, scen_legend, boundaries_out, stacked_histogram] = [simdec_visualization](simdec_visualization.m) (output, inputs, SI, varargin)
+
+builds SimDec visualization using data decomposition.
+
+REQUIRED INPUTS
+
+- **output** - target variable (Y), size [N_runs, 1].
+- **inputs** - input variables (Xs), size [N_runs, N_factors].
+- **SI** - sensitivity indices.
+
+OPTIONAL ARGUMENTS
+
+- **DecompositionLimit** - threshold of cumulative importance (sum(SI)) for selection of input variables for decomposition. Default value 0.8*sum(SI). 
+- **OrderOfVariables** - for custom decomposition specify the order of variables for decomposition, use zero to exclude. For example, if 4 input variables, third and second are desired for decomposition, then specify OrderOfVariables as [0 2 1 0]. Default value [].
+- **NumberOfStates** - the number of states for each input variable, i.e. [0 3 2 0]. Default value [].
+- **BoundaryType** - defines how the numerical boundaries between the states of inputs are defined:
+  - 'precentile-based' for same amount of observations in each state (default value),   
+  -  'median-based' for equaly-spaced ranges of states.
+- **StateBoundaries** - maximums (numeric boundaries) of every state, leave the rest as NaN, e.g. [NaN   3  -1    NaN;    NaN   5   0    NaN;    NaN   7   NaN  NaN]. Default value [].
+ - **OutputName** - name of the output variable. Default value 'Y'.
+ - **InputNames** - names of the input variables in the order of their appearance in the original dataset. Default value {X1, X2, X3...}.
+
+ OUTPUTS
+- **scenarios** - an array of the same size as Y with scenario indices for every simulation run.
+- **scen_legend** - a scenario table that shows which states of which variables compose different sceanrios.
+- **boundaries_out** - numeric boundaries of states of input variables.
+- **stacked_histogram** - object that returns the visualization.
 
 
 ## Example
