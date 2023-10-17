@@ -21,7 +21,7 @@ function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_vi
 %                        variable, i.e. [0 3 2 0].
 %   BoundaryType        - defines how the numerical boundaries between 
 %                        the states of inputs are defined:
-%                        'percentile-based' for same amount of observations 
+%                        'percentile-based' for the same amount of observations 
 %                        in each state,   
 %                        'median-based' for equally-spaced ranges of states.
 %   StateBoundaries      - maximums (numeric boundaries) 
