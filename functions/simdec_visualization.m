@@ -23,7 +23,7 @@ function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_vi
 %                        the states of inputs are defined:
 %                        'percentile-based' for the same amount of observations 
 %                        in each state,   
-%                        'median-based' for equally-spaced ranges of states.
+%                        'interval-based' for equally-spaced ranges of states.
 %   StateBoundaries      - maximums (numeric boundaries) 
 %                        of every state, leave the rest as NaN, e.g. 
 %                                          [NaN   3  -1    NaN;
@@ -62,7 +62,7 @@ function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_vi
     default_number_states = []; % default number of states is computed automatically
     default_boundaries = []; % default boundaries between states are computed automatically
     default_boundary_type = 'percentile-based'; % same amount of observations in each state
-    expected_boundary_types = {'percentile-based','median-based'}; % 'median-based' for equaly-spaced ranges
+    expected_boundary_types = {'percentile-based','interval-based'}; % 'interval-based' for equaly-spaced ranges
     default_colors = {'#DC267F'; '#E8EA2F'; '#26DCD1';'#C552E4';'#3F45D0'};
     defult_output_name = 'Y';
     default_input_names = cell(1, size(inputs,2));
@@ -183,7 +183,7 @@ if isempty(p.Results.StateBoundaries) % if automatic definition of boundaries
                 end
             end
     
-    else % median-based thresholds
+    else % interval-based thresholds
 
             for f = 1 : N_var
                 if states(f) ~= 0

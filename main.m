@@ -27,7 +27,7 @@
 %% TUNING: more variables, different state formation
     
     dec_limit = 0.9; % minimum overall importance [sum(SI)] of chosen for decomposition input variables
-    boundary_type = 'median-based'; % divides input ranges into states using equaly-spaced intervals rather than default same amount of observations in each state 
+    boundary_type = 'interval-based'; % divides input ranges into states using equaly-spaced intervals rather than default same amount of observations in each state 
                                     % This would not make any difference for independent uniformly distributed inputs
                                    
     [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'DecompositionLimit',dec_limit,'BoundaryType',boundary_type);

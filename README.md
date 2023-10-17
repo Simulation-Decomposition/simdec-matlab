@@ -49,7 +49,7 @@ OPTIONAL ARGUMENTS
 - **NumberOfStates** - the number of states for each input variable, i.e. [0 3 2 0]. Default value [].
 - **BoundaryType** - defines how the numerical boundaries between the states of inputs are defined:
   - 'precentile-based' for same amount of observations in each state (default value),   
-  -  'median-based' for equaly-spaced ranges of states.
+  -  'interval-based' for equaly-spaced ranges of states.
 - **StateBoundaries** - maximums (numeric boundaries) of every state, leave the rest as NaN, e.g. [NaN   3  -1    NaN;    NaN   5   0    NaN;    NaN   7   NaN  NaN]. Default value [].
  - **OutputName** - name of the output variable. Default value 'Y'.
  - **InputNames** - names of the input variables in the order of their appearance in the original dataset. Default value {X1, X2, X3...}.
@@ -165,12 +165,12 @@ Specify `'MainColors'` as a cell array of HEX codes of the desired main colors (
 
 Deafult number of variables for decomposition is defined beased on the threshold `0.8*sum(SI)`. The threshold can be changed by using `'DecompositionLimit'` argument.
 
-The `'BoundaryType'` argument defines how the numeric range of input variables is broken down into states. The deafult value `'percentile-based'` forms the states ensuring the same amount of observations in each state. The alternative `'median-based'` approach divides input ranges into equaly-spaced intervals. Changing this argument would not make any difference for independent uniformly distributed inputs.
+The `'BoundaryType'` argument defines how the numeric range of input variables is broken down into states. The deafult value `'percentile-based'` forms the states ensuring the same amount of observations in each state. The alternative `'interval-based'` approach divides input ranges into equaly-spaced intervals. Changing this argument would not make any difference for independent uniformly distributed inputs.
 
 
 ```matlab
     dec_limit = 0.9; % minimum overall importance [sum(SI)] of chosen for decomposition input variables
-    boundary_type = 'median-based'; 
+    boundary_type = 'interval-based'; 
                                    
     [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs,...
         SI,'DecompositionLimit',dec_limit,'BoundaryType',boundary_type);
