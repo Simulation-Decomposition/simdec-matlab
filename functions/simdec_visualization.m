@@ -1,4 +1,4 @@
-function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_visualization(output, inputs, SI, varargin)
+function [scenarios, scen_legend, boundaries_out] = simdec_visualization(output, inputs, SI, varargin)
 % builds SimDec visualization using data decomposition
 %
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -45,8 +45,7 @@ function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_vi
 %   scen_legend        - a scenario table that shows which states of which
 %                      variables compose different scenarios
 %   boundaries_out     - numeric boundaries of states of input variables
-%   stacked_histogram  - object that returns the visualization
-%
+%  
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 % Written by Mariia Kozlova, last updated 26.1.2024
 % Many thanks for the grant #220178 from Finnish Foundation for Economic
@@ -346,15 +345,15 @@ if matches (p.Results.GraphType, 'stacked_histogram') % if stacked histogram
         f(i,:)=histcounts(cell2mat(result_dec(i)),edges);
     end
     
-    stacked_histogram=bar(1:bins,permute(f,[2 1]),1,'stack');
+    h=bar(1:bins,permute(f,[2 1]),1,'stack');
 
         for i=1:max(scenarios)
-            stacked_histogram(i).FaceColor = color(i,:);
+            h(i).FaceColor = color(i,:);
         end
         
         
         for i=1:max(scenarios)
-            stacked_histogram(i).EdgeColor = [0.5 0.5 0.5];
+            h(i).EdgeColor = [0.5 0.5 0.5];
         end
         hold on
 
