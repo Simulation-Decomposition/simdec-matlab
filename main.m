@@ -14,6 +14,10 @@
             
     [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI); % Build visualization
 
+%% BOXPLOT
+    
+    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'GraphType','boxplot'); % Boxplot alternative visualization
+
 
 %% POLISHING: colors, names of variables
 
