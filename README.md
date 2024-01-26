@@ -32,7 +32,7 @@ OUTPUTS
 - **SOE** - second-order effects (also called 'interaction'), size [N_factors, N_factors].
 - **SI**  - sensitivity indices, combined first- and second-order effect of each input, size [N_factors, 1].  
 
-### function [scenarios, scen_legend, boundaries_out, stacked_histogram] = [simdec_visualization](simdec_visualization.m) (output, inputs, SI, varargin)
+### function [scenarios, scen_legend, boundaries_out] = [simdec_visualization](simdec_visualization.m) (output, inputs, SI, varargin)
 
 builds SimDec visualization using data decomposition.
 
