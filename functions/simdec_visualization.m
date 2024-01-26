@@ -35,6 +35,7 @@ function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_vi
 %   OutputName           - name of the output variable.
 %   InputNames           - names of the input variables in the order of
 %                        their appearance in the original dataset. 
+%   GraphType           - stacked histogram by default, boxplot as an alterantive 
 %
 % 
 % OUTPUTS
@@ -47,7 +48,7 @@ function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_vi
 %   stacked_histogram  - object that returns the visualization
 %
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-% Written by Mariia Kozlova, last updated 5.10.2023
+% Written by Mariia Kozlova, last updated 26.1.2024
 % Many thanks for the grant #220178 from Finnish Foundation for Economic
 % Education (lsr.fi) and the grant #6713/31/2021 from Business Finland.
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -69,6 +70,8 @@ function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_vi
         for i = 1:size(inputs,2)
             default_input_names{i} = ['X' num2str(i)];
         end
+    default_graph_type = 'stacked_histogram';
+    expected_graph_types = {'stacked_histogram','boxplot'};
 
 
    p = inputParser;
@@ -84,7 +87,7 @@ function [scenarios, scen_legend, boundaries_out, stacked_histogram] = simdec_vi
    addParameter(p,'MainColors',default_colors,@iscellstr);
    addParameter(p,'OutputName',defult_output_name);
    addParameter(p,'InputNames',default_input_names,@iscellstr);
-   
+   addOptional(p,'GraphType',default_graph_type,@(x) any(validatestring(x,expected_graph_types)));
    
    parse(p,output,inputs,SI,varargin{:});
    
@@ -291,34 +294,6 @@ end
 
 %% 8. Visualization
 
-% separating result by scenario
-result_dec=cell(1,max(scenarios));
-
-for i=1:max(scenarios)
-    s=size(output(scenarios==i),1);
-    result_dec(i)=mat2cell(output(scenarios==i),s,1);
-end
-
-% defining edges of bins
-l=min(output);
-h=max(output);
-bins=100;
-edges=[l:((h-l)/bins):h];
-
-% define frequency of each scenario NPV for each bin
-f=zeros(max(scenarios),100);
-for i=1:max(scenarios)
-    f(i,:)=histcounts(cell2mat(result_dec(i)),edges);
-end
-
-% building stacked histogram
-figure
-stacked_histogram=bar(1:bins,permute(f,[2 1]),1,'stack');
-
-
-% axis titles
-xlabel(p.Results.OutputName);
-ylabel('Probability');
 
 % colours
     
@@ -345,7 +320,33 @@ ylabel('Probability');
             end
         end
 
-        %filling
+% building visualization
+
+figure
+
+if matches (p.Results.GraphType, 'stacked_histogram') % if stacked histogram
+    
+    % separating result by scenario
+    result_dec=cell(1,max(scenarios));
+
+    for i=1:max(scenarios)
+        s=size(output(scenarios==i),1);
+        result_dec(i)=mat2cell(output(scenarios==i),s,1);
+    end
+
+    % defining edges of bins
+    l=min(output);
+    h=max(output);
+    bins=100;
+    edges=[l:((h-l)/bins):h];
+
+    % define frequency of each scenario NPV for each bin
+    f=zeros(max(scenarios),100);
+    for i=1:max(scenarios)
+        f(i,:)=histcounts(cell2mat(result_dec(i)),edges);
+    end
+    
+    stacked_histogram=bar(1:bins,permute(f,[2 1]),1,'stack');
 
         for i=1:max(scenarios)
             stacked_histogram(i).FaceColor = color(i,:);
@@ -357,46 +358,64 @@ ylabel('Probability');
         end
         hold on
 
-% ticks
-    % real axis ticks
-    figure
-    h=histogram(output,bins);
-    xticks=get(gca,'xtick');
+        % ticks
+            % real axis ticks
+            figure
+            h=histogram(output,bins);
+            xticks=get(gca,'xtick');
 
-    % to fix matlab R2022b update issue, when the first/last X tick is not
-    %   necesseraly at the very edge
-        xtick_step = xticks(2)-xticks(1);
+            % to fix matlab R2022b update issue, when the first/last X tick is not
+            %   necesseraly at the very edge
+                xtick_step = xticks(2)-xticks(1);
 
-        if max(h.BinEdges) > max(xticks)
-            xticks = [xticks, xticks(end) + xtick_step]; 
-        end
+                if max(h.BinEdges) > max(xticks)
+                    xticks = [xticks, xticks(end) + xtick_step]; 
+                end
 
-        if min(h.BinEdges) < min(xticks)
-            xticks = [xticks(1) - xtick_step, xticks]; 
-        end
+                if min(h.BinEdges) < min(xticks)
+                    xticks = [xticks(1) - xtick_step, xticks]; 
+                end
 
-yticks=get(gca,'ytick');
-close
-% X axis
+        yticks=get(gca,'ytick');
+        close
+        % X axis
 
-% getting corresponding min and max on the artificial axis
-min_art=(xticks(1)-min(output))*bins/(max(output)-min(output));
-max_art=(xticks(end)-max(output))*bins/(max(output)-min(output))+bins;
-distance_art=max_art-min_art;
+        % getting corresponding min and max on the artificial axis
+        min_art=(xticks(1)-min(output))*bins/(max(output)-min(output));
+        max_art=(xticks(end)-max(output))*bins/(max(output)-min(output))+bins;
+        distance_art=max_art-min_art;
 
-% corresponding ticks on the artificial axis
-xticks_art=(xticks-xticks(1)).*distance_art./(xticks(end)-xticks(1))+min_art;
+        % corresponding ticks on the artificial axis
+        xticks_art=(xticks-xticks(1)).*distance_art./(xticks(end)-xticks(1))+min_art;
 
-% Y axis
-total=size(output,1);
-yticks_art=round(yticks/total,3);
-a=[cellstr(num2str(yticks_art'*100))]; % converting values into percentage
-pct = char(ones(size(a,1),1)*'%'); % creating vector of % signs
-new_yticks = [char(a),pct]; % add the '%' signs after the percentage values
+        % Y axis
+        total=size(output,1);
+        yticks_art=round(yticks/total,3);
+        a=[cellstr(num2str(yticks_art'*100))]; % converting values into percentage
+        pct = char(ones(size(a,1),1)*'%'); % creating vector of % signs
+        new_yticks = [char(a),pct]; % add the '%' signs after the percentage values
 
-% getting new labels to the graph
-set(gca,'XLim',[min(xticks_art), max(xticks_art)],'XTick',xticks_art,'XTickLabel',xticks,'YLim',[0 yticks(end)],'YTickLabel',new_yticks);
-hold off
+        % getting new labels to the graph
+        set(gca,'XLim',[min(xticks_art), max(xticks_art)],'XTick',xticks_art,'XTickLabel',xticks,'YLim',[0 yticks(end)],'YTickLabel',new_yticks);
+        hold off
+
+    xlabel(p.Results.OutputName);
+    ylabel('Probability');
+
+else % if boxplot
+    ind_0=find(scenarios~=0);
+    b = boxplot(output(ind_0), scenarios(ind_0),'Orientation','horizontal','FactorDirection','data','Symbol','ok','Color','k'); % 'FactorDirection','list' to switch the order of boxes
+    b = findobj(gca,'Tag','Box');
+    for j=1:length(b) % coloring
+        patch(get(b(j),'XData'),get(b(j),'YData'),color(length(b)-j+1,:),'FaceAlpha',.8);
+    end
+
+
+    xlabel(p.Results.OutputName);
+    ylabel('Scenario');
+
+
+end
 
 
 %% showing the legend
