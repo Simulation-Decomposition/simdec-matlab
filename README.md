@@ -150,6 +150,7 @@ Add `'GraphType','boxplot'` to the function's input to display the results in th
 ```matlab
     [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'GraphType','boxplot'); 
 ```
+![image](https://github.com/Simulation-Decomposition/simdec-matlab/assets/37065157/5bc2fae6-5cbf-4a1d-8fb4-d669b7e80703)
 
 The boxplot visualization presents exactly the same decomposition and contains the same scenarios, color-coded in the same way as in the stacked histogram.
 
