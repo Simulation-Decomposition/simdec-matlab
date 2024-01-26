@@ -54,12 +54,12 @@ OPTIONAL ARGUMENTS
  - **OutputName** - name of the output variable. Default value 'Y'.
  - **InputNames** - names of the input variables in the order of their appearance in the original dataset. Default value {X1, X2, X3...}.
  - **MainColors** -  a cell array with HEX numbers of the main colors for decomposition (should correspond to the number of states of the first for decomposition input variable). 
+ - **GraphType** - 'stacked_histogram' as a default option and 'boxplot' as an alternative.
 
  OUTPUTS
 - **scenarios** - an array of the same size as Y with scenario indices for every simulation run.
 - **scen_legend** - a scenario table that shows which states of which variables compose different sceanrios.
 - **boundaries_out** - numeric boundaries of states of input variables.
-- **stacked_histogram** - object that returns the visualization.
 
 
 ## Example
@@ -143,6 +143,17 @@ And feel free to go an extra step in your reporting, - name the states (i.e., *l
 ### 4. Customize
 
 The [simdec_visualization.m](simdec_visualization.m) function has numerious optional arguments that can be used to polish the outlook of the results, tune and play with the decomposition set-up.
+
+#### 4.1. Boxplot
+Add `'GraphType','boxplot'` to the function's input to display the results in the form of boxplot instead of stacked histogram. 
+
+```matlab
+    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'GraphType','boxplot'); 
+```
+
+The boxplot visualization presents exactly the same decomposition and contains the same scenarios, color-coded in the same way as in the stacked histogram.
+
+The boxplots are handy when some scenarios have little data and are poorly visible on the histogram. 
 
 #### 4.1. Polishing: colors, names of variables
 
