@@ -268,7 +268,7 @@ scenarios = scenario_matching;
        
         boundaries_out(2:end,:) = boundaries;
     else
-        boundaries_out = boundaries;
+        boundaries_out = p.Results.StateBoundaries;
     end
 
 
