@@ -53,6 +53,7 @@ OPTIONAL ARGUMENTS
 - **StateBoundaries** - maximums (numeric boundaries) of every state, leave the rest as NaN, e.g. [NaN   3  -1    NaN;    NaN   5   0    NaN;    NaN   7   NaN  NaN]. Default value [].
  - **OutputName** - name of the output variable. Default value 'Y'.
  - **InputNames** - names of the input variables in the order of their appearance in the original dataset. Default value {X1, X2, X3...}.
+ - **MainColors** -  a cell array with HEX numbers of the main colors for decomposition (should correspond to the number of states of the first for decomposition input variable). 
 
  OUTPUTS
 - **scenarios** - an array of the same size as Y with scenario indices for every simulation run.
