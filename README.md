@@ -156,7 +156,7 @@ The boxplot visualization presents exactly the same decomposition and contains t
 
 The boxplots are handy when some scenarios have little data and are poorly visible on the histogram. 
 
-#### 4.1. Polishing: colors, names of variables
+#### 4.2. Polishing: colors, names of variables
 
 Use `'OutputName'`, `'InputNames'` to add names of the variables. 
 Specify `'MainColors'` as a cell array of HEX codes of the desired main colors (the shades for subdivisions are produced automatically from the main colors). 
@@ -174,7 +174,7 @@ Specify `'MainColors'` as a cell array of HEX codes of the desired main colors (
 
 
 
-#### 4.2. Tuning decomposition: more variables, different state formation
+#### 4.3. Tuning decomposition: more variables, different state formation
 
 Deafult number of variables for decomposition is defined beased on the threshold `0.8*sum(SI)`. The threshold can be changed by using `'DecompositionLimit'` argument.
 
@@ -193,7 +193,7 @@ The `'BoundaryType'` argument defines how the numeric range of input variables i
 
 
 
-#### 4.3. Tuning decomposition: more variables, different state formation
+#### 4.4. Tuning decomposition: more variables, different state formation
 The decomposition can be further fully customized by altering the amount and the order of inputs for decomposition (`'OrderOfVariables'`), defining custom amount of states (`'NumberOfStates'`) and their boundaries (`'StateBoundaries'`). 
 
 ```matlab
