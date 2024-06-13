@@ -25,7 +25,9 @@ function [scenarios, scen_legend, boundaries_out] = simdec_visualization(output,
 %                        in each state,   
 %                        'interval-based' for equally-spaced ranges of states.
 %   NumberOfBins         - number of bins for histogram
-%   XYLim                - Minimum and maximum values for x and y for plotting [xmin xmax ymin ymax]
+%   XYLim                - Minimum and maximum values for x and y for
+%                        plotting [xmin xmax ymin ymax]. Fox boxplot, ymin
+%                        and ymax are ignored
 %   StateBoundaries      - maximums (numeric boundaries) 
 %                        of every state, leave the rest as NaN, e.g. 
 %                                          [NaN   3  -1    NaN;
@@ -422,6 +424,11 @@ else % if boxplot
 
     xlabel(p.Results.OutputName);
     ylabel('Scenario');
+
+    % set x-axis
+    if length(p.Results.XYLim) > 1
+        xlim([p.Results.XYLim(1)-0.05*p.Results.XYLim(2) p.Results.XYLim(2)*1.05])
+    end
 
 
 end
