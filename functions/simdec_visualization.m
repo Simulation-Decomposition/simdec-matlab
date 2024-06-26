@@ -24,6 +24,10 @@ function [scenarios, scen_legend, boundaries_out] = simdec_visualization(output,
 %                        'percentile-based' for the same amount of observations 
 %                        in each state,   
 %                        'interval-based' for equally-spaced ranges of states.
+%   NumberOfBins         - number of bins for histogram
+%   XYLim                - Minimum and maximum values for x and y for
+%                        plotting [xmin xmax ymin ymax]. Fox boxplot, ymin
+%                        and ymax are ignored
 %   StateBoundaries      - maximums (numeric boundaries) 
 %                        of every state, leave the rest as NaN, e.g. 
 %                                          [NaN   3  -1    NaN;
@@ -82,6 +86,8 @@ function [scenarios, scen_legend, boundaries_out] = simdec_visualization(output,
    addOptional(p,'OrderOfVariables',default_var_order, @(x) isequal(size(x), expected_size));
    addOptional(p,'NumberOfStates',default_number_states, @(x) isequal(size(x), expected_size));
    addOptional(p,'BoundaryType',default_boundary_type,@(x) any(validatestring(x,expected_boundary_types)));
+   addOptional(p,'NumberOfBins',100,validScalarPosNum);
+   addOptional(p,'XYLim',1); 
    addOptional(p,'StateBoundaries',default_boundaries);
    addParameter(p,'MainColors',default_colors,@iscellstr);
    addParameter(p,'OutputName',defult_output_name);
@@ -336,16 +342,16 @@ if matches (p.Results.GraphType, 'stacked_histogram') % if stacked histogram
     % defining edges of bins
     l=min(output);
     h=max(output);
-    bins=100;
+    bins=p.Results.NumberOfBins; % read number of bins from input (or use default)
     edges=[l:((h-l)/bins):h];
 
     % define frequency of each scenario NPV for each bin
-    f=zeros(max(scenarios),100);
+    f=zeros(max(scenarios),bins);
     for i=1:max(scenarios)
         f(i,:)=histcounts(cell2mat(result_dec(i)),edges);
     end
     
-    h=bar(1:bins,permute(f,[2 1]),1,'stack');
+    h=bar(0.5:bins-0.5,permute(f,[2 1]),1,'stack'); % move 0.5 towards minus infinity to match bar edge to zero
 
         for i=1:max(scenarios)
             h(i).FaceColor = color(i,:);
@@ -359,8 +365,14 @@ if matches (p.Results.GraphType, 'stacked_histogram') % if stacked histogram
 
         % ticks
             % real axis ticks
+            total=size(output,1);
             figure
             h=histogram(output,bins);
+            if length(p.Results.XYLim) > 1
+                xlim([p.Results.XYLim(1) p.Results.XYLim(2)])                                   % limits for x-axis
+                ylim([p.Results.XYLim(3)/100*total p.Results.XYLim(4)/100*total]);              % limits for y-axis (need to scale from percentage to number of occasions in one bin)
+                yticks(linspace(p.Results.XYLim(3)/100*total, p.Results.XYLim(4)/100*total,9))  % adjust the number of ticks
+            end
             xticks=get(gca,'xtick');
 
             % to fix matlab R2022b update issue, when the first/last X tick is not
@@ -374,8 +386,8 @@ if matches (p.Results.GraphType, 'stacked_histogram') % if stacked histogram
                 if min(h.BinEdges) < min(xticks)
                     xticks = [xticks(1) - xtick_step, xticks]; 
                 end
-
-        yticks=get(gca,'ytick');
+        
+        y_ticks=get(gca,'ytick');
         close
         % X axis
 
@@ -388,14 +400,14 @@ if matches (p.Results.GraphType, 'stacked_histogram') % if stacked histogram
         xticks_art=(xticks-xticks(1)).*distance_art./(xticks(end)-xticks(1))+min_art;
 
         % Y axis
-        total=size(output,1);
-        yticks_art=round(yticks/total,3);
+        yticks(y_ticks)
+        yticks_art=round(y_ticks/total,3);
         a=[cellstr(num2str(yticks_art'*100))]; % converting values into percentage
         pct = char(ones(size(a,1),1)*'%'); % creating vector of % signs
         new_yticks = [char(a),pct]; % add the '%' signs after the percentage values
 
         % getting new labels to the graph
-        set(gca,'XLim',[min(xticks_art), max(xticks_art)],'XTick',xticks_art,'XTickLabel',xticks,'YLim',[0 yticks(end)],'YTickLabel',new_yticks);
+        set(gca,'XLim',[min(xticks_art), max(xticks_art)],'XTick',xticks_art,'XTickLabel',xticks,'YLim',[0 y_ticks(end)],'YTickLabel',new_yticks);
         hold off
 
     xlabel(p.Results.OutputName);
@@ -413,6 +425,11 @@ else % if boxplot
     xlabel(p.Results.OutputName);
     ylabel('Scenario');
 
+    % set x-axis
+    if length(p.Results.XYLim) > 1
+        xlim([p.Results.XYLim(1)-0.05*p.Results.XYLim(2) p.Results.XYLim(2)*1.05])
+    end
+
 
 end
 
@@ -428,7 +445,7 @@ var = [var1  var2  var3];
 
 
 t = array2table(scen_legend,'VariableNames',var);
-fig = uifigure;
+fig = uifigure('HandleVisibility', 'on');
 uit = uitable(fig,'Data', t);
 
     for i = 1 : scen_legend(end,1)
