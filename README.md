@@ -55,6 +55,9 @@ OPTIONAL ARGUMENTS
  - **InputNames** - names of the input variables in the order of their appearance in the original dataset. Default value {X1, X2, X3...}.
  - **MainColors** -  a cell array with HEX numbers of the main colors for decomposition (should correspond to the number of states of the first for decomposition input variable). 
  - **GraphType** - 'stacked_histogram' as a default option and 'boxplot' as an alternative.
+ - **NumberOfBins** - number of bins for the SimDec histogram.
+  - **XYLim** - Minimum and maximum values for x and y for plotting [xmin xmax ymin ymax]. Fox boxplot, ymin and ymax are ignored.
+
 
  OUTPUTS
 - **scenarios** - an array of the same size as Y with scenario indices for every simulation run.
