@@ -58,7 +58,6 @@ function [scenarios, scen_legend, boundaries_out] = simdec_visualization(output,
 %   boundaries_out     - numeric boundaries of states of input variables
 %  
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-% Written by Mariia Kozlova, last updated 26.1.2024
 % Many thanks for the grant #220178 from Finnish Foundation for Economic
 % Education (lsr.fi) and the grant #6713/31/2021 from Business Finland.
 % * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
