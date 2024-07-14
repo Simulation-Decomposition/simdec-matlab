@@ -57,6 +57,9 @@ OPTIONAL ARGUMENTS
  - **GraphType** - 'stacked_histogram' as a default option and 'boxplot' as an alternative.
  - **NumberOfBins** - number of bins for the SimDec histogram.
   - **XYLim** - Minimum and maximum values for x and y for plotting [xmin xmax ymin ymax]. Fox boxplot, ymin and ymax are ignored.
+  - **Output2** - a second output variable, which will be displayed with a scatterhit and decomposition created for the main output variable.
+  - **Output2Name** - name for the second output variable, default 'Y2'.
+  - **ScatterFraction** - the portion of data / points displayed on the scatterplot. The default value is 1 - the entire dataset is displayed. A value of e.g. 0.5 will show every second point.
 
 
  OUTPUTS
@@ -220,6 +223,33 @@ The decomposition can be further fully customized by altering the amount and the
 ![image](https://github.com/Simulation-Decomposition/simdec-matlab/assets/37065157/ea3b79e1-c969-467d-a817-b23c55a01402)
 
 The optional attributes can be used in any combination. 
+
+
+### 5. Two-output scatterhist
+If relationship between two output variables is in quesiton, the `simdec_visualization function` can build a scatterplot with two correponding histograms on the top and right side, all decomposed and colored by the logic created for the main output variable. 
+
+To create the scatterhist one needs to specify the second output variable for the argument `'Output2'`, additional optional arguments include `'Output2Name'` and `'ScatterFraction'`, which defines how many dots are shown on the scatterplot (1 - all, 0.5 - every second). Other considered above optional arguments work with scatterhist as well. 
+
+
+```matlab   
+Matrix = xlsread ("example_data2.xlsx");
+    
+    output = Matrix(:,1);
+    output2 = Matrix(:,2);
+    inputs = Matrix(:,3:end); 
+    
+    [SI, FOE, SOE]  = sensitivity_indices (output, inputs) 
+    
+    outputname = 'Output1';
+    output2name = 'Output2';
+
+    share_of_data_shown = 0.005;
+    n_bins = 40;
+
+    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OutputName',outputname,'Output2',output2,'Output2Name',output2name,'ScatterFraction',share_of_data_shown,'NumberOfBins',n_bins);
+         
+```
+![alt text](image-1.png)
 
 
 ## Links
