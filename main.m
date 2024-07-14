@@ -50,3 +50,22 @@
 
 
     [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OrderOfVariables',manual_vars,'NumberOfStates',manual_states,'StateBoundaries',manual_boundaries);
+
+   
+%% Two-output visualization 
+
+    Matrix = xlsread ("example_data2.xlsx");
+    
+    output = Matrix(:,1);
+    output2 = Matrix(:,2);
+    inputs = Matrix(:,3:end); 
+    
+    [SI, FOE, SOE]  = sensitivity_indices (output, inputs) 
+    
+    outputname = 'Output1';
+    output2name = 'Output2';
+
+    share_of_data_shown = 0.005;
+    n_bins = 40;
+
+    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OutputName',outputname,'Output2',output2,'Output2Name',output2name,'ScatterFraction',share_of_data_shown,'NumberOfBins',n_bins);

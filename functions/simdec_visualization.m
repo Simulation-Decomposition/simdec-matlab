@@ -39,7 +39,14 @@ function [scenarios, scen_legend, boundaries_out] = simdec_visualization(output,
 %   OutputName           - name of the output variable.
 %   InputNames           - names of the input variables in the order of
 %                        their appearance in the original dataset. 
-%   GraphType           - stacked histogram by default, boxplot as an alterantive 
+%   GraphType           - stacked histogram by default, boxplot as an alterantive
+%   Output2             - a second output variable, that will be displayed
+%                         with a scatterhit
+%   Output2Name         - name for the second output variable
+%   ScatterFraction     - the portion of data / points displayed on the
+%                         scatterplot. The default value is 1 - the entire 
+%                         dataset is displayed. A value of e.g. 0.5 will show
+%                         every second point. 
 %
 % 
 % OUTPUTS
@@ -75,6 +82,9 @@ function [scenarios, scen_legend, boundaries_out] = simdec_visualization(output,
         end
     default_graph_type = 'stacked_histogram';
     expected_graph_types = {'stacked_histogram','boxplot'};
+    default_output2 = [];
+    default_output2name = 'Y2';
+    default_scatterfraction = 1;
 
 
    p = inputParser;
@@ -93,7 +103,10 @@ function [scenarios, scen_legend, boundaries_out] = simdec_visualization(output,
    addParameter(p,'OutputName',defult_output_name);
    addParameter(p,'InputNames',default_input_names,@iscellstr);
    addOptional(p,'GraphType',default_graph_type,@(x) any(validatestring(x,expected_graph_types)));
-   
+   addOptional(p,'Output2',default_output2); 
+   addOptional(p,'Output2Name',default_output2name); 
+   addOptional(p,'ScatterFraction',default_scatterfraction); 
+
    parse(p,output,inputs,SI,varargin{:});
    
 
@@ -299,7 +312,6 @@ end
 
 %% 8. Visualization
 
-
 % colours
     
     N_main_colors = max(scen_legend(:,2));
@@ -325,114 +337,181 @@ end
             end
         end
 
-% building visualization
 
+% 8.1 Single output visualization
+        
 figure
 
-if matches (p.Results.GraphType, 'stacked_histogram') % if stacked histogram
+if isempty(p.Results.Output2) 
+
+    if matches (p.Results.GraphType, 'stacked_histogram') % if stacked histogram
+        
+        % separating result by scenario
+        result_dec=cell(1,max(scenarios));
     
-    % separating result by scenario
-    result_dec=cell(1,max(scenarios));
-
-    for i=1:max(scenarios)
-        s=size(output(scenarios==i),1);
-        result_dec(i)=mat2cell(output(scenarios==i),s,1);
-    end
-
-    % defining edges of bins
-    l=min(output);
-    h=max(output);
-    bins=p.Results.NumberOfBins; % read number of bins from input (or use default)
-    edges=[l:((h-l)/bins):h];
-
-    % define frequency of each scenario NPV for each bin
-    f=zeros(max(scenarios),bins);
-    for i=1:max(scenarios)
-        f(i,:)=histcounts(cell2mat(result_dec(i)),edges);
-    end
-    
-    h=bar(0.5:bins-0.5,permute(f,[2 1]),1,'stack'); % move 0.5 towards minus infinity to match bar edge to zero
-
         for i=1:max(scenarios)
-            h(i).FaceColor = color(i,:);
+            s=size(output(scenarios==i),1);
+            result_dec(i)=mat2cell(output(scenarios==i),s,1);
+        end
+    
+        % defining edges of bins
+        l=min(output);
+        h=max(output);
+        bins=p.Results.NumberOfBins; % read number of bins from input (or use default)
+        edges=[l:((h-l)/bins):h];
+    
+        % define frequency of each scenario for each bin
+        f=zeros(max(scenarios),bins);
+        for i=1:max(scenarios)
+            f(i,:)=histcounts(cell2mat(result_dec(i)),edges);
         end
         
-        
-        for i=1:max(scenarios)
-            h(i).EdgeColor = [0.5 0.5 0.5];
-        end
-        hold on
-
-        % ticks
-            % real axis ticks
-            total=size(output,1);
-            figure
-            h=histogram(output,bins);
-            if length(p.Results.XYLim) > 1
-                xlim([p.Results.XYLim(1) p.Results.XYLim(2)])                                   % limits for x-axis
-                ylim([p.Results.XYLim(3)/100*total p.Results.XYLim(4)/100*total]);              % limits for y-axis (need to scale from percentage to number of occasions in one bin)
-                yticks(linspace(p.Results.XYLim(3)/100*total, p.Results.XYLim(4)/100*total,9))  % adjust the number of ticks
+        h=bar(0.5:bins-0.5,permute(f,[2 1]),1,'stack'); % move 0.5 towards minus infinity to match bar edge to zero
+    
+            for i=1:max(scenarios)
+                h(i).FaceColor = color(i,:);
             end
-            xticks=get(gca,'xtick');
-
-            % to fix matlab R2022b update issue, when the first/last X tick is not
-            %   necesseraly at the very edge
-                xtick_step = xticks(2)-xticks(1);
-
-                if max(h.BinEdges) > max(xticks)
-                    xticks = [xticks, xticks(end) + xtick_step]; 
+            
+            
+            for i=1:max(scenarios)
+                h(i).EdgeColor = [0.5 0.5 0.5];
+            end
+            hold on
+    
+            % ticks
+                % real axis ticks
+                total=size(output,1);
+                figure
+                h=histogram(output,bins);
+                if length(p.Results.XYLim) > 1
+                    xlim([p.Results.XYLim(1) p.Results.XYLim(2)])                                   % limits for x-axis
+                    ylim([p.Results.XYLim(3)/100*total p.Results.XYLim(4)/100*total]);              % limits for y-axis (need to scale from percentage to number of occasions in one bin)
+                    yticks(linspace(p.Results.XYLim(3)/100*total, p.Results.XYLim(4)/100*total,9))  % adjust the number of ticks
                 end
-
-                if min(h.BinEdges) < min(xticks)
-                    xticks = [xticks(1) - xtick_step, xticks]; 
-                end
-        
-        y_ticks=get(gca,'ytick');
-        close
-        % X axis
-
-        % getting corresponding min and max on the artificial axis
-        min_art=(xticks(1)-min(output))*bins/(max(output)-min(output));
-        max_art=(xticks(end)-max(output))*bins/(max(output)-min(output))+bins;
-        distance_art=max_art-min_art;
-
-        % corresponding ticks on the artificial axis
-        xticks_art=(xticks-xticks(1)).*distance_art./(xticks(end)-xticks(1))+min_art;
-
-        % Y axis
-        yticks(y_ticks)
-        yticks_art=round(y_ticks/total,3);
-        a=[cellstr(num2str(yticks_art'*100))]; % converting values into percentage
-        pct = char(ones(size(a,1),1)*'%'); % creating vector of % signs
-        new_yticks = [char(a),pct]; % add the '%' signs after the percentage values
-
-        % getting new labels to the graph
-        set(gca,'XLim',[min(xticks_art), max(xticks_art)],'XTick',xticks_art,'XTickLabel',xticks,'YLim',[0 y_ticks(end)],'YTickLabel',new_yticks);
-        hold off
-
-    xlabel(p.Results.OutputName);
-    ylabel('Probability');
-
-else % if boxplot
-    ind_0=find(scenarios~=0);
-    b = boxplot(output(ind_0), scenarios(ind_0),'Orientation','horizontal','FactorDirection','data','Symbol','ok','Color','k'); % 'FactorDirection','list' to switch the order of boxes
-    b = findobj(gca,'Tag','Box');
-    for j=1:length(b) % coloring
-        patch(get(b(j),'XData'),get(b(j),'YData'),color(length(b)-j+1,:),'FaceAlpha',.8);
+                xticks=get(gca,'xtick');
+    
+                % to fix matlab R2022b update issue, when the first/last X tick is not
+                %   necesseraly at the very edge
+                    xtick_step = xticks(2)-xticks(1);
+    
+                    if max(h.BinEdges) > max(xticks)
+                        xticks = [xticks, xticks(end) + xtick_step]; 
+                    end
+    
+                    if min(h.BinEdges) < min(xticks)
+                        xticks = [xticks(1) - xtick_step, xticks]; 
+                    end
+            
+            y_ticks=get(gca,'ytick');
+            close
+            % X axis
+    
+            % getting corresponding min and max on the artificial axis
+            min_art=(xticks(1)-min(output))*bins/(max(output)-min(output));
+            max_art=(xticks(end)-max(output))*bins/(max(output)-min(output))+bins;
+            distance_art=max_art-min_art;
+    
+            % corresponding ticks on the artificial axis
+            xticks_art=(xticks-xticks(1)).*distance_art./(xticks(end)-xticks(1))+min_art;
+    
+            % Y axis
+            yticks(y_ticks)
+            yticks_art=round(y_ticks/total,3);
+            a=[cellstr(num2str(yticks_art'*100))]; % converting values into percentage
+            pct = char(ones(size(a,1),1)*'%'); % creating vector of % signs
+            new_yticks = [char(a),pct]; % add the '%' signs after the percentage values
+    
+            % getting new labels to the graph
+            set(gca,'XLim',[min(xticks_art), max(xticks_art)],'XTick',xticks_art,'XTickLabel',xticks,'YLim',[0 y_ticks(end)],'YTickLabel',new_yticks);
+            hold off
+    
+        xlabel(p.Results.OutputName);
+        ylabel('Probability');
+    
+    else % if boxplot
+        ind_0=find(scenarios~=0);
+        b = boxplot(output(ind_0), scenarios(ind_0),'Orientation','horizontal','FactorDirection','data','Symbol','ok','Color','k'); % 'FactorDirection','list' to switch the order of boxes
+        b = findobj(gca,'Tag','Box');
+        for j=1:length(b) % coloring
+            patch(get(b(j),'XData'),get(b(j),'YData'),color(length(b)-j+1,:),'FaceAlpha',.8);
+        end
+    
+    
+        xlabel(p.Results.OutputName);
+        ylabel('Scenario');
+    
+        % set x-axis
+        if length(p.Results.XYLim) > 1
+            xlim([p.Results.XYLim(1)-0.05*p.Results.XYLim(2) p.Results.XYLim(2)*1.05])
+        end    
     end
 
 
-    xlabel(p.Results.OutputName);
-    ylabel('Scenario');
 
-    % set x-axis
+
+
+% 8.2 Two-output visualization
+
+else % if two outputs
+
+
+    % Scatter plot
+    subplot(2,2,3);
+    X = output(1:round(1/p.Results.ScatterFraction):end);
+    Y = p.Results.Output2(1:round(1/p.Results.ScatterFraction):end);
+    scenarios_scatter = scenarios(1:round(1/p.Results.ScatterFraction):end);
+    scatter(X, Y, 20, color(scenarios_scatter,:), 'filled');
+    xlabel(p.Results.OutputName);
+    ylabel(p.Results.Output2Name);
+    current_xlim = get(gca, 'XLim');
+    current_ylim = get(gca, 'YLim');
+    hold on;
+
+
+    % Top histogram for output1
+    subplot(2,2,1);
+    hold on;
     if length(p.Results.XYLim) > 1
-        xlim([p.Results.XYLim(1)-0.05*p.Results.XYLim(2) p.Results.XYLim(2)*1.05])
+       xlim_values = [p.Results.XYLim(1) p.Results.XYLim(2)];
+    else
+       xlim_values = current_xlim;
     end
+    rotate90 = 0; % the upper histogram is vertical
+    hide_axes = 1; % axes are hidden for subplots
+    stacked_histogram(output, xlim_values, p.Results.OutputName, scenarios, color, p.Results.NumberOfBins, rotate90, hide_axes)     
+    hold off;
+    
+    
+    % Right histogram for output2
+    subplot(2,2,4);
+    hold on;
+    ylim_values = current_ylim;
+    rotate90_2 = 1; % rotated 90 degrees
+    hide_axes_2 = 1; % axes are hidden for subplots
+    stacked_histogram(p.Results.Output2, ylim_values, p.Results.Output2Name, scenarios, color, p.Results.NumberOfBins, rotate90_2, hide_axes_2)     
+    hold off;
+    
+    
+    % Adjust the layout
+    % subplot(2,2,2);
+    % axis off;
+    
+    % Bring histograms closer
+    s1 = subplot(2,2,3); 
+    set(s1, 'Units', 'normalized');
+    set(s1, 'Position', [0.1300 0.1100 0.44 0.44]);
+    
+    h1 = subplot(2,2,1); 
+    set(h1, 'Units', 'normalized');
+    set(h1, 'Position', [0.1300 0.549 0.44 0.4]);
+    
+    h2 = subplot(2,2,4); 
+    set(h2, 'Units', 'normalized');
+    set(h2, 'Position', [0.569 0.1100 0.4 0.44]);
+
 
 
 end
-
 
 %% showing the legend
 
