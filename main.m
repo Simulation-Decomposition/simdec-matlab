@@ -69,4 +69,19 @@
     share_of_data_shown = 0.005;
     n_bins = 40;
 
-    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OutputName',outputname,'Output2',output2,'Output2Name',output2name,'ScatterFraction',share_of_data_shown,'NumberOfBins',n_bins);
+    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OutputName',outputname...
+        ,'Output2',output2,'Output2Name',output2name,'ScatterFraction',share_of_data_shown,'NumberOfBins',n_bins);
+
+    % Changing XY limits for the first histogram (scatter plot and the second histogram scale accordingly)
+    xlim_values = [1000 3000]; % affects x-axis of the top histogram and x-axis of the scatterplot.
+    ylim_values = [0 4]; % value in % for Probability y-axis of top histogram, does not affect the scatterplot.
+    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OutputName',outputname...
+        ,'Output2',output2,'Output2Name',output2name,'ScatterFraction',share_of_data_shown,'NumberOfBins',n_bins...
+        ,'XLim',xlim_values,'YLim',ylim_values);
+    
+    % Enforcing a desired combination of XY limits for the scatterplot
+    xlim_values = [1000 3000]; % affects x-axis of the top histogram and x-axis of the scatterplot.
+    xlim_values_2 = [0 1000]; % affects (rotated) x-axis of the right histogram and y-axis of the scatterplot.
+    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OutputName',outputname...
+        ,'Output2',output2,'Output2Name',output2name,'ScatterFraction',share_of_data_shown,'NumberOfBins',n_bins...
+        ,'XLim',xlim_values,'XLim2',xlim_values_2);

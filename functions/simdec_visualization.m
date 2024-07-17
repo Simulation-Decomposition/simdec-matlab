@@ -48,6 +48,11 @@ function [scenarios, scen_legend, boundaries_out] = simdec_visualization(output,
 %                         scatterplot. The default value is 1 - the entire 
 %                         dataset is displayed. A value of e.g. 0.5 will show
 %                         every second point. 
+%   XLim2                - Minimum and maximum values for x axis of the
+%                          second histogram (output2 values)[xmin xmax].
+%                          This scales the scatteplot (ylim) accordingly.
+%   YLim2                - Minimum and maximum values for y axis of the second histogram 
+%                          (% values of Probability) [ymin ymax]. 
 %
 % 
 % OUTPUTS
@@ -107,6 +112,8 @@ function [scenarios, scen_legend, boundaries_out] = simdec_visualization(output,
    addOptional(p,'Output2',default_output2); 
    addOptional(p,'Output2Name',default_output2name); 
    addOptional(p,'ScatterFraction',default_scatterfraction); 
+   addOptional(p,'XLim2',[]); 
+   addOptional(p,'YLim2',[]); 
 
    parse(p,output,inputs,SI,varargin{:});
    
@@ -396,11 +403,18 @@ else % if two outputs
         if ~isempty(p.Results.XLim)
             scatter_xlim = p.Results.XLim;
             xlim(p.Results.XLim);
-            scatter_ylim = get(gca, 'YLim'); % updating ylim too, they could change
+            if isempty(p.Results.XLim2) % updating ylim if not specified
+                scatter_ylim = get(gca, 'YLim'); 
+            end
         end
-        
 
-        
+        if ~isempty(p.Results.XLim2)
+            scatter_ylim = p.Results.XLim2;
+            ylim(p.Results.XLim2);
+            if isempty(p.Results.XLim) % updating xlim if not specified 
+                scatter_xlim = get(gca, 'XLim'); 
+            end
+        end
 
     hold on;
 
@@ -419,7 +433,7 @@ else % if two outputs
     hold on;
     rotate90_2 = 1; % rotated 90 degrees
     hide_axes_2 = 1; % axes are hidden for subplots
-    stacked_histogram(p.Results.Output2, scatter_ylim, [], p.Results.Output2Name, scenarios, color, p.Results.NumberOfBins, rotate90_2, hide_axes_2)     
+    stacked_histogram(p.Results.Output2, scatter_ylim, p.Results.YLim2, p.Results.Output2Name, scenarios, color, p.Results.NumberOfBins, rotate90_2, hide_axes_2)     
     hold off;
     
     
