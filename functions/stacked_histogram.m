@@ -1,9 +1,10 @@
-function createStackedHistogram(data, xlim_values, x_axis_title, scenarios, colors, n_bars, rotate90, hide_axes)
+function createStackedHistogram(data, xlim_values, ylim_values, x_axis_title, scenarios, colors, n_bars, rotate90, hide_axes)
     % createStackedHistogram - Function to create a stacked histogram.
     %
     % Inputs:
     %   data          - Data for the histogram.
-    %   xlim_values   - Limits for the x-axis [min, max].
+    %   xlim_values   - Limits for the x-axis [min, max]. If empty, automatic scaling is used.
+    %   ylim_values   - Limits for the y-axis [mi, max] (as probabilities in %). If empty, automatic scaling is used.
     %   x_axis_title  - Title for the x-axis.
     %   scenarios     - Scenario indices corresponding to the data.
     %   colors        - Colors for each scenario.
@@ -16,6 +17,13 @@ function createStackedHistogram(data, xlim_values, x_axis_title, scenarios, colo
     numScenarios = length(uniqueScenarios);
 
     % Define histogram bins
+    if isempty(xlim_values)
+        figure
+        s = scatter(data, data);
+        xlim_values = get(gca, 'XLim');
+        close(gcf)
+    end
+
     edges = linspace(xlim_values(1), xlim_values(2), n_bars + 1);
 
     % Initialize matrix to store counts
@@ -50,11 +58,17 @@ function createStackedHistogram(data, xlim_values, x_axis_title, scenarios, colo
         h(i).FaceColor = colors(i, :);
     end
 
-    % Set x-axis limits
+    % Set x-axis and y-axis limits
     if rotate90
         ylim(xlim_values);
+        if ~isempty(ylim_values)
+            xlim(ylim_values);
+        end        
     else
         xlim(xlim_values);
+        if ~isempty(ylim_values)
+            ylim(ylim_values);
+        end        
     end
 
     % Hide axes if specified

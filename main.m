@@ -13,6 +13,7 @@
             % by the combined first- and second-order effects of the inputs
             
     [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI); % Build visualization
+            
 
 %% BOXPLOT
     
