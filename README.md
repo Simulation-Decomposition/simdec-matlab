@@ -51,15 +51,18 @@ OPTIONAL ARGUMENTS
   - 'precentile-based' for same amount of observations in each state (default value),   
   -  'interval-based' for equaly-spaced ranges of states.
 - **StateBoundaries** - maximums (numeric boundaries) of every state, leave the rest as NaN, e.g. [NaN   3  -1    NaN;    NaN   5   0    NaN;    NaN   7   NaN  NaN]. Default value [].
+- **XLim** - Minimum and maximum values for x-axis of the histogram or boxplot [xmin xmax]. 
+- **YLim** - Minimum and maximum values for y-axis of the histogram in % values [ymin ymax].  
  - **OutputName** - name of the output variable. Default value 'Y'.
  - **InputNames** - names of the input variables in the order of their appearance in the original dataset. Default value {X1, X2, X3...}.
  - **MainColors** -  a cell array with HEX numbers of the main colors for decomposition (should correspond to the number of states of the first for decomposition input variable). 
  - **GraphType** - 'stacked_histogram' as a default option and 'boxplot' as an alternative.
  - **NumberOfBins** - number of bins for the SimDec histogram.
-  - **XYLim** - Minimum and maximum values for x and y for plotting [xmin xmax ymin ymax]. Fox boxplot, ymin and ymax are ignored.
   - **Output2** - a second output variable, which will be displayed with a scatterhit and decomposition created for the main output variable.
   - **Output2Name** - name for the second output variable, default 'Y2'.
   - **ScatterFraction** - the portion of data / points displayed on the scatterplot. The default value is 1 - the entire dataset is displayed. A value of e.g. 0.5 will show every second point.
+  - **XLim2** - Minimum and maximum values for x-axis of the second rotated histogram [xmin xmax]. This scales the scatteplot (ylim) accordingly.
+  - **YLim2** - Minimum and maximum values for y-axis of the second rotated histogram in % values [ymin ymax].  
 
 
  OUTPUTS
@@ -246,10 +249,35 @@ Matrix = xlsread ("example_data2.xlsx");
     share_of_data_shown = 0.005;
     n_bins = 40;
 
-    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OutputName',outputname,'Output2',output2,'Output2Name',output2name,'ScatterFraction',share_of_data_shown,'NumberOfBins',n_bins);
+    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OutputName',outputname...
+    ,'Output2',output2,'Output2Name',output2name,'ScatterFraction',share_of_data_shown,'NumberOfBins',n_bins);
          
 ```
 ![alt text](image-1.png)
+
+#### 5.1. Playing with axis limits
+You can change x- and y-axes limits for both histograms, the scatterplot scales accordingly. If only the axes of one histogram are changed, the scatterplot and the second histogram scale accordingly. 
+
+```matlab 
+    xlim_values = [1000 3000]; % affects x-axis of the top histogram and x-axis of the scatterplot.
+    ylim_values = [0 4]; % value in % for Probability y-axis of top histogram, does not affect the scatterplot.
+    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OutputName',outputname...
+        ,'Output2',output2,'Output2Name',output2name,'ScatterFraction',share_of_data_shown,'NumberOfBins',n_bins...
+        ,'XLim',xlim_values,'YLim',ylim_values);
+```
+(The graph demonstrates that not only Output1 axis has been changed as specified in the code above (scatterplot x-axis), but the second histogram has been automatically truncated as well (x-axis of the rotated right histogram and the corresponding y-axis of the scatterplot) to avoid empty space in the scatterplot.)
+![alt text](image.png)
+
+If the full control over the both axes of the scatterplot is needed, both `'XLim'` and `'XLim2'` should be specified.
+
+```matlab 
+    xlim_values = [1000 3000]; % affects x-axis of the top histogram and x-axis of the scatterplot.
+    xlim_values_2 = [0 1000]; % affects (rotated) x-axis of the right histogram and y-axis of the scatterplot.
+    [scenarios, scen_legend, boundaries] = simdec_visualization (output, inputs, SI,'OutputName',outputname...
+        ,'Output2',output2,'Output2Name',output2name,'ScatterFraction',share_of_data_shown,'NumberOfBins',n_bins...
+        ,'XLim',xlim_values,'XLim2',xlim_values_2);
+```
+![alt text](image-2.png)
 
 
 ## Links
