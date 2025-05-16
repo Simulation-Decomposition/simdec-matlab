@@ -362,8 +362,22 @@ if isempty(p.Results.Output2)
 
     
     else % if boxplot
-        ind_0=find(scenarios~=0);
-        b = boxplot(output(ind_0), scenarios(ind_0),'Orientation','horizontal','FactorDirection','data','Symbol','ok','Color','k'); % 'FactorDirection','list' to switch the order of boxes
+       N_scen = scen_legend(end,1);
+       % fixing empty scenarios (otherwise boxplot skips them)
+        output_fixed = output;
+        scenarios_fixed = scenarios;
+        
+        % Find missing scenario indices
+        missing = setdiff(1:N_scen, unique(scenarios));
+        
+        % Add one artificial point per missing scenario at max output value
+        artificial_value = max(output) + 1; % or add small offset if needed
+        for i = missing
+            output_fixed(end+1) = artificial_value;
+            scenarios_fixed(end+1) = i;
+        end
+        scenarios_cat = categorical(scenarios_fixed, 1:N_scen, string(1:N_scen));
+        b = boxplot(output_fixed, scenarios_cat,'Orientation','horizontal','FactorDirection','data','Symbol','ok','Color','k'); % 'FactorDirection','list' to switch the order of boxes
         b = findobj(gca,'Tag','Box');
         for j=1:length(b) % coloring
             patch(get(b(j),'XData'),get(b(j),'YData'),color(length(b)-j+1,:),'FaceAlpha',.8);
